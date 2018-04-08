@@ -15,3 +15,4 @@ drugs = json.loads(drugs_raw)
 for result in drugs['results']:
     print('The drugs id is', result['id'])
 
+
