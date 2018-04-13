@@ -12,5 +12,10 @@ drugs_raw = r1.read().decode("utf-8")
 conn.close()
 
 drugs = json.loads(drugs_raw)
-for term in drugs['results']:
-    print('The manufacturer that produces aspirin is', term['term'])
+
+i=0
+for drug_id in drugs['results']:
+    drug_id =  "<'ol'>" + drug[i]['id'] + "</ol>" + \
+    i+=1
+
+
