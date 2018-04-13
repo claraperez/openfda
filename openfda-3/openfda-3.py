@@ -1,6 +1,8 @@
-import http.client
+import http.server
+import socketserver
 import json
 
+PORT = 8002
 
 # HTTPRequestHandler class
 class testHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
@@ -18,11 +20,12 @@ class testHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
 
         drugs = json.loads(drugs_raw)
 
-        i=0
-        for drug_id in drugs['results']:
-            drug_id =  "<ol>" + drug[i]['id'] + "</ol>" + \
-            i=+1
 
+        drugs= drugs['results']
+        drugs_id =  "<ol>" + drugs[0]['id'] + "</ol>"
+        for i in range(9):
+            drugs_id = drugs_id + "<ol>" + drugs[i+1]['id'] + "</ol>"
+        
         # Send response status code
         self.send_response(200)
 
@@ -31,7 +34,7 @@ class testHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
         self.end_headers()
 
         # Send message back to client
-        message = drug_id
+        message = drugs_id
         # Write content as utf-8 data
         self.wfile.write(bytes(message, "utf8"))
         return
@@ -39,7 +42,7 @@ class testHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
 # Handler = http.server.SimpleHTTPRequestHandler
 Handler = testHTTPRequestHandler
 
-httpd = socketserver.TCPServer((IP, PORT), Handler)
+httpd = socketserver.TCPServer(("", PORT), Handler)
 print("serving at port", PORT)
 try:
     httpd.serve_forever()
