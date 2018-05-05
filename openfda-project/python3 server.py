@@ -1,84 +1,43 @@
-import http.server
-import socketserver
-import http.client
-import json
+"""
 
-socketserver.TCPServer.allow_reuse_adress = True
+Basic Final Project Description
+The basic final project for the “Programming in Network Environments” course is the
+development of an application for searching and listing drugs and companies inside “drug product
+labelling“ using the OpenFDA API: https://api.fda.gov/drug/label.json
+In the project all the previous practices will be included and the project must
+follow the rules described in this specification so it can be tested automatically
 
-PORT = 8000
+Directory and files for the project
+The project must be delivered inside the GitHub “openfda” repository which each
+student has already created.
+https://github.com/<github-login>/openfda
+In this repository a directory with the name “openfda-project” must exists and it
+must include the file “server.py” with the implementation of the web server.
+The server must be started with “python3 server.py” and this must start the
+HTTP web server that must be listening in 8000 port.
 
-# HTTPRequestHandler class
-class serverRequestHandler(http.server.BaseHTTPRequestHandler):
+Web server API to be implemented
+The web server must offer the API:
+    searchDrug?active_ingredient=<name>
+    searchCompany?company=<company_name>
+    listDrugs
+    listCompanies
+The response for all this end points must be a HTML list (<ul></ul>) with the results.
+To pass the automatic tests in the project, the next file must be copied:
+https://github.com/acs-test/openfda-project/blob/master/test_openfda.py
+inside the “openfda-project” student directory. And to execute the tests:./test_openfda.py
 
-    # GET
-    def do_GET(self):
+Web server API Details
+searchDrug?active_ingredient=<name>
+Search drugs that includes <name> in the active_ingredient .
+searchCompany?company=<company_name>
+Search drugs that includes <company_name> in the openfda.manufacturer_name field.
+listDrugs
+List drugs returned by default by OpenFDA
+listCompanies
+List with the openfda.manufacturer_name from the drugs returned by default by OpenFDA. If this field does not exists
+it should appear as “Unknown”.
 
-        r_web = self.path   #request from web page
-        print(r_web)
+"""
 
-        if 'label' in r_web or 'limit' in r_web:
-            print("if label")
-            # init, file to open search.html
-            filename = "searchDrug"
-            with open(filename, "r") as f:
-                content = f.read()
-            # Send response status code
-            self.send_response(200)
-            # Send headers
-            self.send_header('Content-type','text/html')
-            self.end_headers()
-            # Write content as utf-8 data
-            self.wfile.write(bytes(content, "utf8"))
-            # Read data from submitted form: active ingredient & company name
-            print('request to fetch drugs')
-            r_openfda = r_web[r_web.index('?') + 1:]  # print(s[s.index('.')+1:])
-            print(r_openfda)
-
-            active_ingredient = r_web[r_web.index('=') + 1:r_web.index('&')]
-            print(active_ingredient)
-            company = r_web[r_web.index('&'):]
-            print(company)
-            # string for openfda query
-            s_openfda = "/drug/label.json?search=generic_name:" + active_ingredient + company
-            print(s_openfda)
-
-            # sending request openFDA
-
-            headers = {'User-Agent': 'http-client'}
-
-            conn = http.client.HTTPSConnection("api.fda.gov")
-            conn.request("GET", s_openfda, None, headers)
-            r1 = conn.getresponse()
-            print(r1.status, r1.reason)
-            repos_raw = r1.read().decode("utf-8")
-            conn.close()
-
-            drugs = json.loads(drugs_raw)
-            self.wfile.write(bytes(str(drugs), "utf8"))
-
-
-        else:
-            # init, file to open search.html
-            filename = "search.html"
-            with open(filename, "r") as f:
-                content = f.read()
-            # Send response status code
-            self.send_response(200)
-            # Send headers
-            self.send_header('Content-type','text/html')
-            self.end_headers()
-            # Write content as utf-8 data
-            self.wfile.write(bytes(content, "utf8"))
-
-
-
-
-        return
-
-# Handler = http.server.SimpleHTTPRequestHandler
-Handler = serverRequestHandler
-
-httpd = socketserver.TCPServer(("", PORT), Handler)
-print("serving at port", PORT)
-httpd.serve_forever()
-
+import server
