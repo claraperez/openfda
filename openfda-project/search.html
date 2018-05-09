@@ -8,7 +8,8 @@
     <h1>Search OpenFDA Application</h1>
 <form action="searchDrug" method="get">
     <p>Drug active ingredient
-    <p><input name="active_ingredient" type="text"><br>
+    <p><input name="active_ingredient" type="text">
+    Limit <input type="text" name="limit">
     <p><input type="submit"  value="Send to OpenFDA: active_ingredient"></p>
 </form>
 <form action="searchCompany" method="get">
@@ -18,11 +19,16 @@
 </form>
 <form action="listDrugs" method="get">
     <p>Drugs list
+    <p>Limit <input type="text" name="limit">
     <p><input type="submit"  value="Send to OpenFDA: listDrugs"></p>
 </form>
 <form action="listCompanies" method="get">
     <p>Companies list
     <p><input type="submit"  value="Send to OpenFDA: listCompanies"></p>
+</form>
+<form action="listWarnings" method="get">
+    <p>Warnings list
+    <p><input type="submit"  value="Send to OpenFDA: listWarnings"></p>
 </form>
 </body>
 </html>
